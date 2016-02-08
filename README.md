@@ -53,7 +53,7 @@ Build RPM on server
 
 ## Installing the RPM 
 
-    Install the built RPM by running "sudo yum install RPMS/x86_64/cstore-1.4-1.el6.x86_64.rpm"
+    Install the built RPM by running "sudo yum install RPMS/x86_64/cstore_fdw-1.4-1.el6.x86_64.rpm"
 
 
 Introduction
