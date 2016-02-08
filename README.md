@@ -1,13 +1,59 @@
-cstore_fdw
-==========
+CSTORE_FDW 1.4 RPM built for RHEL 6.5
 
-[![Build Status](https://travis-ci.org/citusdata/cstore_fdw.svg?branch=master)][status]
-[![Coverage](http://img.shields.io/coveralls/citusdata/cstore_fdw/master.svg)][coverage]
+**Description**: 
+
+This extension implements a columnar store for PostgreSQL. 
+Columnar stores provide notable benefits for analytic use-cases where data is loaded in batches.
 
 This extension implements a columnar store for PostgreSQL. Columnar stores
 provide notable benefits for analytic use-cases where data is loaded in batches.
 
 Join the [Mailing List][mailing-list] to stay on top of the latest developments.
+
+## Dependencies
+
+cstore\_fdw depends on protobuf-c for serializing and deserializing table metadata.
+So we need to install these packages first:
+
+    # Fedora 17+, CentOS, and Amazon Linux
+    sudo yum install protobuf-c-devel
+
+**Note.** In CentOS 5 and 6, you may need to install or update EPEL 5 or EPEL 6
+repositories. See [this page]
+(http://www.rackspace.com/knowledge_center/article/installing-rhel-epel-repo-on-centos-5x-or-6x)
+for instructions.
+
+**Note.** In Amazon Linux, EPEL 6 repository is installed by default, but it is not 
+enabled. See [these instructions](http://aws.amazon.com/amazon-linux-ami/faqs/#epel)
+for how to enable it. 
+
+**Note.** cstore_fdw requires PostgreSQL 9.3, 9.4 or 9.5. It doesn't support earlier
+versions of PostgreSQL.
+
+
+## Installation
+
+Build RPM using Vagrant
+
+    1. The repo is cloned into a local sandbox
+    2. Run "vagrant up" to build the VM. 
+    3. Run "vagrant ssh" to connect to VM. 
+    4. Run rpmbuild -ba SPECS/cstore.spec --define 'pg_dir /usr/pgsql-9.4'  to build the cstore rpm package.
+
+    Please note: "pg_dir" must be available in your environment path
+
+Build RPM on server
+
+    1. Once repo is cloned, run "sh ./bootstrap.sh"
+    2. cd to ~/rpmbuild 
+    3. Run the following command 
+      rpmbuild -ba /SPECS/cstore.spec  --define 'pg_dir /usr/pgsql-9.4'
+
+    Please note that "pg_dir" MUST be accessible in users path...
+
+## Installing the RPM 
+
+    Install the built RPM by running "sudo yum install RPMS/x86_64/cstore-1.4-1.el6.x86_64.rpm"
 
 
 Introduction
@@ -33,42 +79,6 @@ with this extension. This brings:
   evaluate different query plans and pick the best one.
 * Simple setup. Create foreign table and copy data. Run SQL.
 
-
-Building
---------
-
-cstore\_fdw depends on protobuf-c for serializing and deserializing table metadata.
-So we need to install these packages first:
-
-    # Fedora 17+, CentOS, and Amazon Linux
-    sudo yum install protobuf-c-devel
-
-    # Ubuntu 10.4+
-    sudo apt-get install protobuf-c-compiler
-    sudo apt-get install libprotobuf-c0-dev
-
-    # Mac OS X
-    brew install protobuf-c
-
-**Note.** In CentOS 5 and 6, you may need to install or update EPEL 5 or EPEL 6
-repositories. See [this page]
-(http://www.rackspace.com/knowledge_center/article/installing-rhel-epel-repo-on-centos-5x-or-6x)
-for instructions.
-
-**Note.** In Amazon Linux, EPEL 6 repository is installed by default, but it is not
-enabled. See [these instructions](http://aws.amazon.com/amazon-linux-ami/faqs/#epel)
-for how to enable it.
-
-Once you have protobuf-c installed on your machine, you are ready to build
-cstore\_fdw.  For this, you need to include the pg\_config directory path in
-your make command. This path is typically the same as your PostgreSQL
-installation's bin/ directory path. For example:
-
-    PATH=/usr/local/pgsql/bin/:$PATH make
-    sudo PATH=/usr/local/pgsql/bin/:$PATH make install
-
-**Note.** cstore_fdw requires PostgreSQL 9.3, 9.4 or 9.5. It doesn't support earlier
-versions of PostgreSQL.
 
 
 Usage
@@ -250,86 +260,22 @@ that column (for example you want to query only the last week's data), and hence
 don't need to sort the data in such cases.
 
 
-Uninstalling cstore_fdw
------------------------
+## Getting help
 
-Before uninstalling the extension, first you need to drop all the cstore tables:
-
-    postgres=# DROP FOREIGN TABLE cstore_table_1;
-    ...
-    postgres=# DROP FOREIGN TABLE cstore_table_n;
-
-Then, you should drop the cstore server and extension:
-
-    postgres=# DROP SERVER cstore_server;
-    postgres=# DROP EXTENSION cstore_fdw;
-
-cstore\_fdw automatically creates some directories inside the PostgreSQL's data
-directory to store its files. To remove them, you can run:
-
-    $ rm -rf $PGDATA/cstore_fdw
-
-Then, you should remove cstore\_fdw from ```shared_preload_libraries``` in
-your ```postgresql.conf```:
-
-    shared_preload_libraries = ''    # (change requires restart)
-
-Finally, to uninstall the extension you can run the following command in the
-extension's source code directory. This will clean up all the files copied during
-the installation:
-
-    $ sudo PATH=/usr/local/pgsql/bin/:$PATH make uninstall
-
-
-Changeset
----------
-### Version 1.4
-
-* (Feature) Added support for ```TRUNCATE TABLE```
-* (Fix) Added support for PostgreSQL 9.5
-
-### Version 1.3
-
-* (Feature) Added support for ```ALTER TABLE ADD COLUMN``` and ```ALTER TABLE DROP COLUMN```.
-* (Feature) Added column list support in ```COPY FROM```.
-* (Optimization) Improve row count estimation, which results in better plans.
-* (Fix) Fix the deadlock issue during concurrent inserts.
-* (Fix) Return correct result when using whole row references.
-
-### Version 1.2
-
-* (Feature) Added support for ```COPY TO```.
-* (Feature) Added support for ```INSERT INTO cstore_table SELECT ...```.
-* (Optimization) Improved memory usage.
-* (Fix) Dropping multiple cstore tables in a single command cleans-up files
-  of all them.
-
-### Version 1.1
-
-* (Feature) Make filename option optional, and use a default directory inside
-  $PGDATA to manage cstore tables.
-* (Feature) Automatically delete files on DROP FOREIGN TABLE.
-* (Fix) Return empty table if no data has been loaded. Previously, cstore_fdw
-  errored out.
-* (Fix) Fix overestimating relation column counts when planning.
-* (Feature) Added cstore\_table\_size(tablename) for getting the size of a cstore
-  table in bytes.
-
-
-Copyright
----------
-
-Copyright (c) 2016 Citus Data, Inc.
-
-This module is free software; you can redistribute it and/or modify it under the
-Apache v2.0 License.
-
-For all types of questions and comments about the wrapper, please contact us at
+For all types of questions and comments about the wrapper, please contact 
 engage @ citusdata.com.
 
+## Other helpful links
 [status]: https://travis-ci.org/citusdata/cstore_fdw
 [mailing-list]: https://groups.google.com/forum/#!forum/cstore-users
 [citus-cstore-docs]: https://www.citusdata.com/documentation/citusdb-documentation/
 [coverage]: https://coveralls.io/r/citusdata/cstore_fdw
 [copy-command]: http://www.postgresql.org/docs/current/static/sql-copy.html
 [analyze-command]: http://www.postgresql.org/docs/current/static/sql-analyze.html
+
+## Open source licensing info
+1. [TERMS](TERMS.md)
+2. [LICENSE](LICENSE)
+3. [CFPB Source Code Policy](https://github.com/cfpb/source-code-policy/)
+
+
