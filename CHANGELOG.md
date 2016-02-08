@@ -5,7 +5,6 @@ We follow the [Semantic Versioning 2.0.0](http://semver.org/) format.
 
 
 ## Added
-
 cstore_fdw-1.4 => 2016-02-08
 
 =======
