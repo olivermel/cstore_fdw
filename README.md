@@ -1,4 +1,4 @@
-CSTORE_FDW 1.4 RPM built for RHEL 6.5
+# CSTORE_FDW 1.4 RPM built for RHEL 6.5
 
 **Description**: 
 
