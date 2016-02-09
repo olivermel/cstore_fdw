@@ -16,8 +16,8 @@ Group:   Development/Tools
 License: Apache License
 URL:     https://github.com/citusdata/cstore_fdw
 Source:  https://github.com/citusdata/cstore_fdw/archive/master.tar.gz
-Obsoletes: cstore_fdw <= 2.19
-Provides: cstore_fdw = 2.19
+Obsoletes: cstore_fdw <= 1.4
+Provides: cstore_fdw = 1.4
 Requires: protobuf-c-devel
 
 %description
