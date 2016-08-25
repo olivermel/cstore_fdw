@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-sudo yum -y groupinstall 'Development Tools'
-wget https://dl.fedoraproject.org/pub/epel/epel-release-latest-6.noarch.rpm
-sudo rpm -ivh epel-release-latest-6.noarch.rpm
-sudo yum -y install protobuf-c-devel   #requirement
-
 SCRIPT=$(readlink -f "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
 

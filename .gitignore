@@ -50,3 +50,4 @@
 *.pb-c.*
 
 .vagrant
+bootstrap.sh-mine

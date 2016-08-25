@@ -7,18 +7,18 @@
 # Set metadata
 ###############
 
-Name:    cstore_fdw
-Version: %{_version}
-Release: 1%{?dist}
-Summary: An extension that implements a columnar store for PostgreSQL.
+Name:    	cstore_fdw%{suffix}
+Version: 	%{_version}
+Release: 	1%{?dist}
+Summary: 	An extension that implements a columnar store for PostgreSQL.
 
-Group:   Development/Tools
-License: Apache License
-URL:     https://github.com/citusdata/cstore_fdw
-Source:  https://github.com/citusdata/cstore_fdw/archive/master.tar.gz
-Obsoletes: cstore_fdw <= 1.4
-Provides: cstore_fdw = 1.4
-Requires: protobuf-c-devel
+Group:   	Development/Tools
+License: 	Apache License
+URL:    	https://github.com/citusdata/cstore_fdw
+Source:  	https://github.com/citusdata/cstore_fdw/archive/master.tar.gz
+Obsoletes: 	cstore_fdw%{suffix} <= 1.4
+Provides: 	cstore_fdw%{suffix} = 1.4
+Requires: 	protobuf-c-devel
 
 %description
 
@@ -51,16 +51,23 @@ BuildRoot: %(mktemp -ud %{_tmppath}/build/%{name}-%{version}-%{release}-XXXXXX)
 
 %build
 
-make
+#make
 
-
-%install
-
-%make_install
 ###########################################################
 # INSTALL
 # This directive is where the code is actually installed
 # in the %{buildroot} folder in preparation for packaging.
+
+%install
+
+mkdir -p %{buildroot}/etc/profile.d
+
+echo 'export PATH=$PATH:/usr/pgsql-9.5/bin/' >> %{buildroot}/etc/profile.d/cstore.sh
+echo 'export USE_PGXS=1' >> %{buildroot}/etc/profile.d/cstore.sh
+source %{buildroot}/etc/profile.d/cstore.sh
+
+%make_install
+
 ###########################################################
 
 %clean
@@ -69,18 +76,18 @@ make
 
 %files
 %defattr(-,root,root,-)
-/usr/pgsql-9.4/lib/cstore_fdw.so
-/usr/pgsql-9.4/share/extension/cstore_fdw--1.0--1.1.sql
-/usr/pgsql-9.4/share/extension/cstore_fdw--1.1--1.2.sql
-/usr/pgsql-9.4/share/extension/cstore_fdw--1.2--1.3.sql
-/usr/pgsql-9.4/share/extension/cstore_fdw--1.3--1.4.sql
-/usr/pgsql-9.4/share/extension/cstore_fdw--1.4.sql
-/usr/pgsql-9.4/share/extension/cstore_fdw.control
+/usr/pgsql-9.5/lib/cstore_fdw.so
+/usr/pgsql-9.5/share/extension/cstore_fdw--1.0--1.1.sql
+/usr/pgsql-9.5/share/extension/cstore_fdw--1.1--1.2.sql
+/usr/pgsql-9.5/share/extension/cstore_fdw--1.2--1.3.sql
+/usr/pgsql-9.5/share/extension/cstore_fdw--1.3--1.4.sql
+/usr/pgsql-9.5/share/extension/cstore_fdw--1.4.sql
+/etc/profile.d/cstore.sh
+/usr/pgsql-9.5/share/extension/cstore_fdw.control
 
 
 %doc
 
 
 
-%changelog
-
+%changelog 

@@ -10,7 +10,7 @@ Vagrant.configure("2") do |config|
   config.vm.define :cstore do |cstore_config|
       cstore_config.vm.box = "bento/centos-6.7"
       cstore_config.vm.hostname = "cstore"
-      cstore_config.vm.network :private_network, ip: "192.168.1.8"
+      cstore_config.vm.network :private_network, ip: "192.168.0.8"
       cstore_config.vm.provider "virtualbox" do |vb|
       cstore_config.ssh.forward_agent = true
       cstore_config.ssh.forward_x11 = true

@@ -1,4 +1,4 @@
-# CSTORE_FDW 1.4 RPM built for RHEL 6.5
+# CSTORE_FDW 1.4 RPM built for RHEL 6.X
 
 **Description**: 
 
@@ -18,17 +18,17 @@ So we need to install these packages first:
     # Fedora 17+, CentOS, and Amazon Linux
     sudo yum install protobuf-c-devel
 
-**Note.** In CentOS 5 and 6, you may need to install or update EPEL 5 or EPEL 6
-repositories. See [this page]
-(http://www.rackspace.com/knowledge_center/article/installing-rhel-epel-repo-on-centos-5x-or-6x)
-for instructions.
+**Note.** 
+    In CentOS 5 and 6, you may need to install or update EPEL 5 or EPEL 6 repositories. 
+    See [this page] (http://www.rackspace.com/knowledge_center/article/installing-rhel-epel-repo-on-centos-5x-or-6x) for instructions.
 
-**Note.** In Amazon Linux, EPEL 6 repository is installed by default, but it is not 
-enabled. See [these instructions](http://aws.amazon.com/amazon-linux-ami/faqs/#epel)
-for how to enable it. 
+**Note.** 
+    In Amazon Linux, EPEL 6 repository is installed by default, but it is not enabled. 
+    See [these instructions](http://aws.amazon.com/amazon-linux-ami/faqs/#epel) for how to enable it. 
 
-**Note.** cstore_fdw requires PostgreSQL 9.3, 9.4 or 9.5. It doesn't support earlier
-versions of PostgreSQL.
+**Note.** 
+    cstore_fdw requires PostgreSQL 9.3, 9.4 or 9.5. It doesn't support earlier versions of PostgreSQL.
+    This build was done with postgresql95
 
 
 ## Installation
@@ -38,7 +38,7 @@ Build RPM using Vagrant
     1. The repo is cloned into a local sandbox
     2. Run "vagrant up" to build the VM. 
     3. Run "vagrant ssh" to connect to VM. 
-    4. Run rpmbuild -ba SPECS/cstore.spec --define 'pg_dir /usr/pgsql-9.4'  to build the cstore rpm package.
+    4. Run rpmbuild -ba SPECS/cstore.spec --define 'pg_dir /usr/pgsql-9.5' --define 'suffix 95' to build the cstore rpm package.
 
     Please note: "pg_dir" must be available in your environment path
 
@@ -47,7 +47,7 @@ Build RPM on server
     1. Once repo is cloned, run "sh ./bootstrap.sh"
     2. cd to ~/rpmbuild 
     3. Run the following command 
-      rpmbuild -ba /SPECS/cstore.spec  --define 'pg_dir /usr/pgsql-9.4'
+      rpmbuild -ba /SPECS/cstore.spec  --define 'pg_dir /usr/pgsql-9.5' --define 'suffix 95'
 
     Please note that "pg_dir" MUST be accessible in users path...
 
