@@ -62,7 +62,7 @@ BuildRoot: %(mktemp -ud %{_tmppath}/build/%{name}-%{version}-%{release}-XXXXXX)
 
 mkdir -p %{buildroot}/etc/profile.d
 
-echo 'export PATH=$PATH:/usr/pgsql-9.5/bin/' >> %{buildroot}/etc/profile.d/cstore.sh
+echo 'export PATH=$PATH:%{pg_dir}/bin/' >> %{buildroot}/etc/profile.d/cstore.sh
 echo 'export USE_PGXS=1' >> %{buildroot}/etc/profile.d/cstore.sh
 source %{buildroot}/etc/profile.d/cstore.sh
 
